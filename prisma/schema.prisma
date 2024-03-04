@@ -1,0 +1,99 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["fullTextSearch", "fullTextIndex"]
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+
+model Hotel {
+  id String @id @default(uuid())
+  userId String
+  title String @db.Text
+  description String @db.LongText
+  image String
+  country String
+  state String
+  city String
+  locationDescription String @db.LongText
+  swimmingPool Boolean @default(false)
+  gym Boolean  @default(false)
+  turco Boolean @default(false)
+  jacuzzi Boolean @default(false)
+  bar Boolean @default(false)
+  grillRoast Boolean @default(false)
+  wifi Boolean @default(false)
+  freeParking Boolean @default(false)
+  sports_scene Boolean @default(false)
+  poolTable Boolean @default(false)
+  addedAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+  rooms Room[]
+  bookings Booking[]
+
+  // @@fullText([title])
+  @@fulltext([title])
+
+}
+
+
+
+model Room{
+  id String @id @default(uuid())
+  title String
+  description String @db.LongText
+  bedCount Int @default(1)
+  guestCount Int @default(0)
+  bathRoomCount Int @default(0)
+  kingBed Int @default(0)
+  quuenBed Int @default(0)
+  image String 
+  breakFastPrice Int
+  roomPrice Int
+  TV Boolean @default(false)
+  balcony Boolean @default(false)
+  airCondition Boolean @default(false)
+  fan Boolean @default(false)
+  closet Boolean @default(false)
+
+  hotelId String
+  Hotel Hotel? @relation(fields: [hotelId], references: [id],onDelete: Cascade)
+
+  Booking Booking[]
+  @@index([hotelId])
+
+
+
+}
+
+model Booking {
+  id String @id @default(uuid())
+  userName String
+  userEmail  String
+  userId String
+  roomId String
+  hotelId String
+  hotelOwnerId String
+  startDate DateTime
+  endDate DateTime
+  breakFastIncluded Boolean
+  currency String
+  totalPrice Int
+  paymentStatus Boolean @default(false)
+  paymentIntentId String @unique
+  bookedAt DateTime @default(now())
+
+  Hotel Hotel? @relation(fields: [hotelId], references: [id])
+  Room Room? @relation(fields: [roomId], references: [id])
+
+  @@index([hotelId])
+  @@index([roomId])
+
+
+}
