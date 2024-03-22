@@ -12,11 +12,21 @@ import { GiPoolTableCorner } from "react-icons/gi";
 import { TiWeatherWindyCloudy } from "react-icons/ti";
 import RoomCard from "../room/RoomCard";
 import { Separator } from "../ui/separator";
+import MapBox from "../map/MapBox";
+import React, { useEffect } from "react";
 
 const HotelDetailsClient = ({hotel,bookings} : {hotel : HotelWithRooms,bookings?: Booking[]}) => {
    const {getCountryByCode,getStateByCode} = useLocation();
    const  country = getCountryByCode(hotel.country);
    const state = getStateByCode(hotel.country,hotel.state);
+   const [mapRendered, setMapRendered] = React.useState(false); // Agregar estado para rastrear la renderización del mapa
+
+
+   useEffect(() => {
+      setMapRendered(true); // Actualizar mapRendered a true después de la renderización inicial
+    }, []); // El segundo argumento [] indica que useEffect se ejecutará solo una vez después de la primera renderización
+  
+   
 
 
    return (
@@ -67,6 +77,9 @@ const HotelDetailsClient = ({hotel,bookings} : {hotel : HotelWithRooms,bookings?
                </div>
             </div>}
           </div>
+         {!mapRendered && ( // Renderizar el mapa condicionalmente
+          <MapBox /> // Pasar devolución de llamada para establecer mapRendered
+        )}
       </div>
    )
 }

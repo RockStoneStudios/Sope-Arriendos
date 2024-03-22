@@ -10,6 +10,7 @@ import useLocation from "@/hooks/useLocation";
 import { Button } from "../ui/button";
 import { FaSwimmer } from "react-icons/fa";
 
+
 const HotelCard = ({hotel} : {hotel : HotelWithRooms}) => {
     const pathname = usePathname();
     const isMyHotels = pathname.includes('my-hotels');
